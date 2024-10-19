@@ -65,15 +65,14 @@ def update_user():
 
 
 @app.route("/api/index",methods = ["get"])
-def api_index():
+def api_index(): #Retorna todos os usuarios
     
     conn = db_conn()
     cursor = conn.cursor()
     cursor.execute("""Select * from users ORDER BY id ASC""")
     data = cursor.fetchall()
-    return jsonify(data)
-
-#@app.route("/api/edit/<resource_id>",methods = ["get"])
+    #return jsonify(data)
+    return render_template("users.html",users = data)
 @app.route("/api/index/<resource_id>", methods=["GET"])
 def api_edit(resource_id):
     conn = db_conn()
@@ -89,7 +88,6 @@ def api_create():
     new_request = request.get_json()
     conn = db_conn()
     cursor = conn.cursor()
-
     name = new_request["name"]
     cursor.execute("""INSERT INTO USERS (name) VALUES (%s)""",[name])
     conn.commit()
@@ -107,7 +105,6 @@ def api_update(resource_id):
     conn.commit()
     cursor.close()
     return jsonify({"message":"criado com sucesso"})
-
 
 @app.route("/api/delete/<int:resource_id>", methods=["DELETE"])
 def api_deletar(resource_id):
